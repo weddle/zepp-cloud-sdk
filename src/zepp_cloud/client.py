@@ -12,6 +12,7 @@ import httpx
 
 from .auth import AppTokenAuth
 from .config import ZeppConfig
+from .resources.band import BandResource
 from .transport.http import HttpTransport
 
 
@@ -50,6 +51,10 @@ class ZeppClient:
     def close(self) -> None:
         if self._transport:
             self._transport.close()
+
+    @property
+    def band(self) -> BandResource:
+        return BandResource(self)
 
 
 class AsyncZeppClient:

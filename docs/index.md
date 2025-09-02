@@ -4,7 +4,7 @@ High-quality, typed, sync+async Python SDK for Zepp/Amazfit cloud surfaces, with
 
 ## Status
 
-Early scaffolding. See `docs/plan.md` for the detailed project plan and milestones.
+Early scaffolding. The detailed project plan is maintained locally under `sprints/plan.md` (gitignored).
 
 ## Quickstart (placeholder)
 
@@ -24,4 +24,5 @@ client = ZeppClient(apptoken="...", user_id="...", timezone="America/New_York")
 - Agent Guidelines: `docs/agent.md`
 - Security: `SECURITY.md`
 - Contributing: `CONTRIBUTING.md`
-
+- Documentation Map: `docs/documentation-map.md`
+- Internal plan: `sprints/plan.md` (local, gitignored)
