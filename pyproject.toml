@@ -11,7 +11,9 @@ authors = [
   { name = "Zepp Cloud SDK Contributors" }
 ]
 requires-python = ">=3.9"
-dependencies = []
+dependencies = [
+  "httpx>=0.27",
+]
 dynamic = ["version"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
@@ -37,7 +39,10 @@ export = ["pyarrow>=15"]
 duckdb = ["duckdb>=1.0"]
 timescale = ["psycopg[binary]>=3.1"]
 influx = ["influxdb-client>=1.43"]
-test = ["pytest>=7"]
+test = [
+  "pytest>=7",
+  "respx>=0.20",
+]
 
 [project.scripts]
 zepp-cloud = "zepp_cloud.cli:main"
@@ -62,7 +67,7 @@ extend-exclude = [
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "PTH", "PL", "RUF"]
-ignore = []
+ignore = ["PLR0913", "PLR2004"]
 
 [tool.ruff.format]
 quote-style = "preserve"
