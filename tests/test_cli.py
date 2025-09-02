@@ -10,4 +10,3 @@ def test_cli_version_flag(capsys):
 
     out = capsys.readouterr().out.strip()
     assert out
-

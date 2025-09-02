@@ -13,4 +13,3 @@ class AppTokenAuth:
     """
 
     apptoken: str
-

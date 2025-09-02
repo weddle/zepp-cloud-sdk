@@ -17,4 +17,3 @@ def main(argv: list[str] | None = None) -> NoReturn:
 
     parser.print_help()
     raise SystemExit(0)
-

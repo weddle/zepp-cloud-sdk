@@ -26,9 +26,8 @@ class AsyncZeppClient:
         self.user_id = user_id
         self.timezone = timezone
 
-    async def __aenter__(self) -> "AsyncZeppClient":
+    async def __aenter__(self) -> AsyncZeppClient:
         return self
 
     async def __aexit__(self, exc_type, exc, tb) -> None:  # type: ignore[no-untyped-def]
         return None
-
