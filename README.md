@@ -23,6 +23,21 @@ source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 python -m pip install -U pip
 ```
 
+### Local Dev Loop
+Run formatter, linter (with autofix), then tests:
+```bash
+ruff format .
+ruff check . --fix
+pytest -q
+```
+
+Pre-commit (local only) also runs Ruff format, Ruff lint (autofix), and MyPy:
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
 ## Contributing
 - See `CONTRIBUTING.md` and `docs/agent.md` for workflow and agent preferences.
 - Code of Conduct: `CODE_OF_CONDUCT.md`.
@@ -33,3 +48,10 @@ python -m pip install -U pip
 ## License
 - Apache-2.0, see `LICENSE` and `NOTICE`.
 
+## CI Roadmap
+- Current CI: single smoke job on pushes to `main` and PRs; installs minimal deps, runs Ruff format check, Ruff lint, and `pytest -q`.
+- Reintroduce later, in order:
+  1) Coverage gate with a modest threshold
+  2) MyPy in CI
+  3) Python version matrix
+  4) Extras needed by integration tests

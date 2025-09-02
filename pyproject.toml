@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools>=69", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zepp-cloud-sdk"
+description = "Typed Python SDK for Zepp/Amazfit cloud with export and TSDB sinks."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Zepp Cloud SDK Contributors" }
+]
+requires-python = ">=3.9"
+dependencies = []
+dynamic = ["version"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/zepp-cloud-sdk"
+Issues = "https://github.com/your-org/zepp-cloud-sdk/issues"
+
+[project.optional-dependencies]
+export = ["pyarrow>=15"]
+duckdb = ["duckdb>=1.0"]
+timescale = ["psycopg[binary]>=3.1"]
+influx = ["influxdb-client>=1.43"]
+test = ["pytest>=7"]
+
+[project.scripts]
+zepp-cloud = "zepp_cloud.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "node-and-date"
+write_to = "src/zepp_cloud/_version.py"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "PTH", "PL", "RUF"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "preserve"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_unreachable = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+warn_return_any = true
+no_implicit_optional = true
+check_untyped_defs = true
+disallow_incomplete_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+pretty = true
+exclude = ["^tests/"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
