@@ -53,3 +53,47 @@ def test_cli_band_summary_basic(capsys):
     assert row["date"] == "2025-08-20"
     assert row["steps_total"] == 100
     assert row["distance_m"] == 200
+
+
+@respx.mock
+def test_cli_band_summary_pretty(capsys):
+    url = "https://api-mifit.huami.com/v1/data/band_data.json"
+    payload = {
+        "data": [
+            {
+                "date": "2025-08-20",
+                "summary": _b64(
+                    {"stp": {"ttl": 1, "dis": 2, "cal": 3}, "slp": {"dp": 4, "lt": 5}}
+                ),
+            },
+            {
+                "date": "2025-08-21",
+                "summary": _b64({"stp": {"ttl": 6, "dis": 7, "cal": 8}, "slp": {}}),
+            },
+        ]
+    }
+    respx.get(url).mock(return_value=httpx.Response(200, json=payload))
+
+    try:
+        cli_main(
+            [
+                "band",
+                "summary",
+                "--from",
+                "2025-08-20",
+                "--to",
+                "2025-08-21",
+                "--token",
+                "T",
+                "--user",
+                "U",
+                "--pretty",
+            ]
+        )
+    except SystemExit as e:
+        assert e.code == 0
+
+    out = capsys.readouterr().out
+    data = json.loads(out)
+    assert isinstance(data, list) and len(data) == 2
+    assert data[0]["date"] == "2025-08-20"

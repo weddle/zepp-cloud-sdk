@@ -57,3 +57,24 @@ The SDK injects required headers per request:
 - Empty results: verify `user_id`, date range, timezone, and region base.
 - Errors/429: the SDK retries and paces requests; widen date windows if needed.
 
+## CLI
+You can fetch summaries via the CLI.
+
+JSON Lines (default):
+```bash
+zepp-cloud band summary \
+  --from 2025-08-20 \
+  --to 2025-08-21 \
+  --token "$HUAMI_TOKEN" \
+  --user "$HUAMI_USER_ID"
+```
+
+Pretty-printed JSON array:
+```bash
+zepp-cloud band summary \
+  --from 2025-08-20 \
+  --to 2025-08-21 \
+  --token "$HUAMI_TOKEN" \
+  --user "$HUAMI_USER_ID" \
+  --pretty
+```

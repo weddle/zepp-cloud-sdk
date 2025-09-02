@@ -40,6 +40,12 @@ def _register_band(subparsers: argparse._SubParsersAction[argparse.ArgumentParse
     summary.add_argument("--tz", dest="timezone", default=os.environ.get("TZ", "UTC"))
     summary.add_argument("--token", dest="apptoken", default=os.environ.get("HUAMI_TOKEN"))
     summary.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
+    summary.add_argument(
+        "--pretty",
+        dest="pretty",
+        action="store_true",
+        help="Pretty-print JSON array instead of JSONL",
+    )
 
 
 def _handle_band(args: argparse.Namespace) -> NoReturn:
@@ -60,8 +66,11 @@ def _handle_band(args: argparse.Namespace) -> NoReturn:
         finally:
             client.close()
 
-        for r in rows:
-            print(json.dumps(r.model_dump()))
+        if getattr(args, "pretty", False):
+            print(json.dumps([r.model_dump() for r in rows], indent=2, ensure_ascii=False))
+        else:
+            for r in rows:
+                print(json.dumps(r.model_dump()))
         raise SystemExit(0)
 
     print("error: missing band subcommand", file=sys.stderr)
