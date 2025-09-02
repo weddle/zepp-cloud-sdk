@@ -7,11 +7,12 @@ High-quality, typed, sync+async Python SDK for Zepp/Amazfit cloud surfaces, with
 - Sprint 2 complete: Band daily summaries (models, parser, CLI) with docs.
 - Sprint 3 complete: Band detail with HR decoding (data_hr) and CLI; docs updated.
 - Sprint 4 complete: Events — Stress (SDK+CLI) and documented.
-- Sprint 5 in progress: Events — Blood Oxygen (SDK+CLI) implemented; docs updated.
+- Sprint 5 complete: Events — Blood Oxygen (SDK+CLI) and documented.
+- Sprint 6 complete: Events — PAI (SDK+CLI) and documented.
 - Not published to PyPI yet.
 
 ## Next Step
-- Finalize Sprint 5 polish and docs; plan Sprint 6 (PAI).
+- Plan Sprint 7 (Readiness), then Workouts history/detail.
 
 We will update this README after each major milestone.
 

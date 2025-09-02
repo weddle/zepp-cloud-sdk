@@ -39,3 +39,13 @@ This endpoint returns health event series for various types, including stress.
   - osa_event: `extra.spo2_decrease` (magnitude).
   - odi (nightly summary): `odi`, `odiNum`, `valid`, `score`, `dispCode`; grouped by local day using `timestamp`.
 - Device variance: Some accounts emit empty arrays for `spo2`/`hr`; rely on `extra` fields where available.
+
+## PAI Mapping
+- eventType: `PaiHealthInfo`
+- Fields commonly observed (naming may vary by device/firmware):
+  - `dailyPai` (daily PAI)
+  - `totalPai` (running total)
+  - `restHr`, `maxHr`
+  - HR zone thresholds and minutes, e.g., `low`/`medium`/`high` and `minutesLow`/`minutesMed`/`minutesHigh`. Some payloads use alternative keys (e.g., `lowBpm`, `medBpm`, `highBpm`, or `lowMinutes`).
+- Group rows by local day using `timestamp` and the same `timeZone` you pass in the request.
+- Parser should be lenient and retain unused keys in `raw_item` for provenance.

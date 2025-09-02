@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from ..client import ZeppClient
 from ..models.stress import StressDay
 from ..parsers.blood_oxygen import parse_blood_oxygen_items
+from ..parsers.pai import parse_pai_items
 from ..parsers.stress import parse_stress_item
 
 
@@ -95,6 +96,42 @@ class EventsResource:
         if not isinstance(items, list):
             return {"click": [], "osa_event": [], "odi": []}
         return parse_blood_oxygen_items(items, tz)
+
+    def pai(
+        self,
+        *,
+        days: Optional[int] = 30,
+        from_ms: Optional[int] = None,
+        to_ms: Optional[int] = None,
+        time_zone: Optional[str] = None,
+        limit: int = 1000,
+    ) -> list:
+        tz = time_zone or self._client.timezone
+        f_ms, t_ms = _build_window_ms(days=days, from_ms=from_ms, to_ms=to_ms)
+        windows = _split_windows(f_ms, t_ms, max_days=limit)
+        out: list = []
+        for start, end in windows:
+            out.extend(self._fetch_pai_range(start, end, tz=tz, limit=limit))
+        return out
+
+    def _fetch_pai_range(self, from_ms: int, to_ms: int, *, tz: str, limit: int) -> list:
+        transport = self._client._transport
+        assert transport is not None
+        base = self._client.config.events_base.rstrip("/")
+        url = f"{base}/users/{self._client.user_id}/events"
+        params = {
+            "eventType": "PaiHealthInfo",
+            "from": str(from_ms),
+            "to": str(to_ms),
+            "timeZone": tz,
+            "limit": str(limit),
+        }
+        resp = transport.request("GET", url, params=params)
+        body = resp.json()
+        items = body.get("items")
+        if not isinstance(items, list):
+            return []
+        return parse_pai_items(items, tz)
 
 
 def _build_window_ms(
