@@ -19,6 +19,10 @@ pip-wheel-metadata/
 venv/
 env/
 
+# Environment variable files
+.env
+.env.*
+
 # Test/coverage
 .pytest_cache/
 .mypy_cache/
@@ -37,3 +41,6 @@ htmlcov/
 
 # Docs build artifacts
 site/
+
+# Temporary files
+tmp/
