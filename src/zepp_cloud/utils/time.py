@@ -20,3 +20,12 @@ def local_midnight_epoch_ms(date_str: str, tz_name: str) -> int:
     dt_utc = dt_local.astimezone(timezone.utc)
     return int(dt_utc.timestamp() * 1000)
 
+
+def ms_to_local_date(ms: int, tz_name: str) -> str:
+    tz = None
+    try:
+        tz = ZoneInfo(tz_name)
+    except Exception:
+        tz = timezone.utc
+    dt = datetime.fromtimestamp(ms / 1000.0, tz=timezone.utc).astimezone(tz)
+    return dt.strftime("%Y-%m-%d")

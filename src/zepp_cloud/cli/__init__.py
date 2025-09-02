@@ -16,6 +16,7 @@ def main(argv: list[str] | None = None) -> NoReturn:
 
     subparsers = parser.add_subparsers(dest="command")
     _register_band(subparsers)
+    _register_events(subparsers)
 
     args = parser.parse_args(argv)
 
@@ -25,6 +26,8 @@ def main(argv: list[str] | None = None) -> NoReturn:
 
     if args.command == "band":
         return _handle_band(args)
+    if args.command == "events":
+        return _handle_events(args)
 
     parser.print_help()
     raise SystemExit(0)
@@ -119,4 +122,45 @@ def _handle_band(args: argparse.Namespace) -> NoReturn:
         raise SystemExit(0)
 
     print("error: missing band subcommand", file=sys.stderr)
+    raise SystemExit(2)
+
+
+def _register_events(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
+    events = subparsers.add_parser("events", help="Events-related commands")
+    ev_sub = events.add_subparsers(dest="events_cmd")
+
+    stress = ev_sub.add_parser("stress", help="Fetch stress events")
+    stress.add_argument("--days", dest="days", type=int, default=14)
+    stress.add_argument("--tz", dest="timezone", default=os.environ.get("TZ", "UTC"))
+    stress.add_argument("--token", dest="apptoken", default=os.environ.get("HUAMI_TOKEN"))
+    stress.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
+    stress.add_argument("--pretty", dest="pretty", action="store_true")
+
+
+def _handle_events(args: argparse.Namespace) -> NoReturn:
+    if args.events_cmd == "stress":
+        apptoken = args.apptoken
+        user_id = args.user_id
+        if not apptoken or not user_id:
+            msg = (
+                "error: missing apptoken or user_id (use --token/--user or set "
+                "HUAMI_TOKEN/HUAMI_USER_ID)"
+            )
+            print(msg, file=sys.stderr)
+            raise SystemExit(2)
+
+        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
+        try:
+            rows = client.events.stress(days=args.days, time_zone=args.timezone)
+        finally:
+            client.close()
+
+        if getattr(args, "pretty", False):
+            print(json.dumps([r.model_dump() for r in rows], indent=2, ensure_ascii=False))
+        else:
+            for r in rows:
+                print(json.dumps(r.model_dump()))
+        raise SystemExit(0)
+
+    print("error: missing events subcommand", file=sys.stderr)
     raise SystemExit(2)

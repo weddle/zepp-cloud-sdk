@@ -26,3 +26,5 @@ client = ZeppClient(apptoken="...", user_id="...", timezone="America/New_York")
 - Contributing: `CONTRIBUTING.md`
 - Documentation Map: `docs/documentation-map.md`
 - Internal plan: `sprints/plan.md` (local, gitignored)
+ - Usage: `docs/usage/band.md`, `docs/usage/events.md`
+ - Research: `docs/research/band_data.md`, `docs/research/events.md`

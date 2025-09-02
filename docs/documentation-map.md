@@ -9,13 +9,13 @@ This page lists the documentation structure and where to find things.
 - Contributing and DCO: `CONTRIBUTING.md`
 - References and research notes: `docs/references.md`
 - API endpoint research summaries:
-  - Band data: `docs/research/band_data.md` (to be added)
-  - Events (stress, SpO₂, PAI, readiness): `docs/research/events.md` (to be added)
-  - Workouts: `docs/research/workouts.md` (to be added)
-- SDK Guides (to be added as features land):
-  - Band summaries guide: `docs/usage/band.md`
-  - Events guide: `docs/usage/events.md`
-  - Workouts guide: `docs/usage/workouts.md`
-  - Export and TSDB: `docs/export.md`, `docs/tsdb.md`
+  - Band data: `docs/research/band_data.md`
+  - Events (stress): `docs/research/events.md`
+  - Workouts: `docs/research/workouts.md` (planned)
+- SDK Guides:
+  - Band summaries/detail: `docs/usage/band.md`
+  - Events (stress): `docs/usage/events.md`
+  - Workouts: `docs/usage/workouts.md` (planned)
+  - Export and TSDB: `docs/export.md`, `docs/tsdb.md` (planned)
 - API Reference (to be generated with mkdocstrings later): `docs/api/`
 - Internal sprint plan and notes (local only, gitignored): `sprints/`

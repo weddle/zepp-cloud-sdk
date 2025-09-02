@@ -13,6 +13,7 @@ import httpx
 from .auth import AppTokenAuth
 from .config import ZeppConfig
 from .resources.band import BandResource
+from .resources.events import EventsResource
 from .transport.http import HttpTransport
 
 
@@ -55,6 +56,10 @@ class ZeppClient:
     @property
     def band(self) -> BandResource:
         return BandResource(self)
+
+    @property
+    def events(self) -> EventsResource:
+        return EventsResource(self)
 
 
 class AsyncZeppClient:

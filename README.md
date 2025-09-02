@@ -3,14 +3,14 @@
 High-quality, typed, sync+async Python SDK for Zepp/Amazfit cloud surfaces, with first-class offline export and optional TSDB sinks.
 
 ## Status
-- Sprint 0 and 1 complete (scaffold, transport/auth/config).
-- Sprint 2 in progress: Band daily summaries implemented in SDK with tests.
-- CLI commands and docs for band summaries are being added.
+- Sprint 0–1 complete (scaffold, transport/auth/config).
+- Sprint 2 complete: Band daily summaries (models, parser, CLI) with docs.
+- Sprint 3 complete: Band detail with HR decoding (data_hr) and CLI; docs updated.
+- Sprint 4 in progress: Events — Stress implemented (SDK+CLI) and documented.
 - Not published to PyPI yet.
 
 ## Next Step
-- Finish Sprint 2 documentation and CLI for band summaries.
-- Prepare for Sprint 3 (Band detail/HR curve parsing).
+- Wrap Sprint 4 (stress events) polish and move to Sprint 5 (Blood oxygen events).
 
 We will update this README after each major milestone.
 
@@ -57,3 +57,4 @@ pre-commit run --all-files
 ## Documentation
 - Documentation map: `docs/documentation-map.md`
 - Band summaries guide: `docs/usage/band.md`
+ - Events (stress) guide: `docs/usage/events.md`
