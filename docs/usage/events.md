@@ -115,6 +115,38 @@ zepp-cloud events pai \
 - Zone thresholds (bpm): `zone_low_bpm` (low), `zone_med_bpm` (medium), `zone_high_bpm` (high) — names may vary, parser is lenient
 - Zone minutes: `minutes_low`, `minutes_med`, `minutes_high` — names may vary, parser is lenient
 
+## Readiness
+
+Fetch readiness `watch_score` items and preserve companion `watch_score_data` raw payloads.
+
+### Quick Example (SDK)
+```python
+from zepp_cloud import ZeppClient
+
+client = ZeppClient(apptoken="<HUAMI_TOKEN>", user_id="<HUAMI_USER_ID>", timezone="America/New_York")
+rows = client.events.readiness(days=7, time_zone="America/New_York")
+for r in rows:
+    print(r.date, r.sleep_hrv, r.sleep_rhr, r.hrv_score, r.rhr_score)
+client.close()
+```
+
+### CLI
+```bash
+zepp-cloud events readiness \
+  --days 7 \
+  --tz America/New_York \
+  --user "$HUAMI_USER_ID" \
+  --token "$HUAMI_TOKEN" \
+  --pretty
+```
+
+### Field Mapping (watch_score)
+- Core: `sleepHRV`, `sleepRHR`
+- Component scores: `hrvScore`, `rhrScore`, `skinTempScore`, `rdnsScore`, `phyScore`, `mentScore`, `ahiScore`
+- Baselines: `hrvBaseline`, `rhrBaseline`, `skinTempBaseLine`, `mentBaseLine`, `phyBaseline`, `ahiBaseline`, `afibBaseLine`
+- Other: `status`, `algVer`, `algSubVer`, optional `deviceId`
+- Companion: `watch_score_data.rawData` is preserved in raw for future decode
+
 ## Data Shape
 - Response: `{ items: [...] }`
 - Each item contains `data` as a JSON string encoding an array of `{ time: <epoch_ms>, value: <int> }` at ~5‑minute cadence (may vary by device).

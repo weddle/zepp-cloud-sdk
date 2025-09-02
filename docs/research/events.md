@@ -49,3 +49,13 @@ This endpoint returns health event series for various types, including stress.
   - HR zone thresholds and minutes, e.g., `low`/`medium`/`high` and `minutesLow`/`minutesMed`/`minutesHigh`. Some payloads use alternative keys (e.g., `lowBpm`, `medBpm`, `highBpm`, or `lowMinutes`).
 - Group rows by local day using `timestamp` and the same `timeZone` you pass in the request.
 - Parser should be lenient and retain unused keys in `raw_item` for provenance.
+
+## Readiness Mapping
+- eventType: `readiness`
+- Prefer `watch_score` items for analytics; fields commonly observed:
+  - Core: `sleepHRV`, `sleepRHR`
+  - Component scores: `hrvScore`, `rhrScore`, `skinTempScore`, `rdnsScore`, `phyScore`, `mentScore`, `ahiScore`
+  - Baselines: `hrvBaseline`, `rhrBaseline`, `skinTempBaseLine`, `mentBaseLine`, `phyBaseline`, `ahiBaseline`, `afibBaseLine`
+  - Other: `status`, `algVer`, `algSubVer`, `deviceId`
+- `watch_score_data` companion items may include a `rawData` payload; the SDK preserves it in raw for future decoding.
+- Derive local `date` via `timestamp` and the same `timeZone` used in the request.

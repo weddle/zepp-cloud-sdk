@@ -156,6 +156,13 @@ def _register_events(subparsers: argparse._SubParsersAction[argparse.ArgumentPar
     pai.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
     pai.add_argument("--pretty", dest="pretty", action="store_true")
 
+    rd = ev_sub.add_parser("readiness", help="Fetch readiness events")
+    rd.add_argument("--days", dest="days", type=int, default=7)
+    rd.add_argument("--tz", dest="timezone", default=os.environ.get("TZ", "UTC"))
+    rd.add_argument("--token", dest="apptoken", default=os.environ.get("HUAMI_TOKEN"))
+    rd.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
+    rd.add_argument("--pretty", dest="pretty", action="store_true")
+
 
 def _handle_events(args: argparse.Namespace) -> NoReturn:
     if args.events_cmd == "stress":
@@ -237,6 +244,31 @@ def _handle_events(args: argparse.Namespace) -> NoReturn:
         client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
         try:
             rows = client.events.pai(days=args.days, time_zone=args.timezone)
+        finally:
+            client.close()
+
+        if getattr(args, "pretty", False):
+            print(json.dumps([r.model_dump() for r in rows], indent=2, ensure_ascii=False))
+        else:
+            for r in rows:
+                print(json.dumps(r.model_dump()))
+        raise SystemExit(0)
+
+    if args.events_cmd == "readiness":
+        apptoken = args.apptoken
+        user_id = args.user_id
+        if not apptoken or not user_id:
+            msg = (
+                "error: missing apptoken or user_id (use --token/--user or set "
+                "HUAMI_TOKEN/HUAMI_USER_ID)"
+            )
+        
+            print(msg, file=sys.stderr)
+            raise SystemExit(2)
+
+        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
+        try:
+            rows = client.events.readiness(days=args.days, time_zone=args.timezone)
         finally:
             client.close()
 

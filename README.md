@@ -60,3 +60,4 @@ pre-commit run --all-files
 - Documentation map: `docs/documentation-map.md`
 - Band summaries guide: `docs/usage/band.md`
 - Events (stress) guide: `docs/usage/events.md`
+ - Events (blood oxygen, PAI, readiness) in `docs/usage/events.md`
