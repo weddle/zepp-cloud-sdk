@@ -136,6 +136,19 @@ def _register_events(subparsers: argparse._SubParsersAction[argparse.ArgumentPar
     stress.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
     stress.add_argument("--pretty", dest="pretty", action="store_true")
 
+    bo = ev_sub.add_parser("blood-oxygen", help="Fetch blood oxygen events")
+    bo.add_argument("--days", dest="days", type=int, default=14)
+    bo.add_argument("--tz", dest="timezone", default=os.environ.get("TZ", "UTC"))
+    bo.add_argument("--token", dest="apptoken", default=os.environ.get("HUAMI_TOKEN"))
+    bo.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
+    bo.add_argument("--pretty", dest="pretty", action="store_true")
+    bo.add_argument(
+        "--subtype",
+        dest="subtype",
+        choices=["click", "osa_event", "odi"],
+        default=None,
+    )
+
 
 def _handle_events(args: argparse.Namespace) -> NoReturn:
     if args.events_cmd == "stress":
@@ -162,5 +175,49 @@ def _handle_events(args: argparse.Namespace) -> NoReturn:
                 print(json.dumps(r.model_dump()))
         raise SystemExit(0)
 
+    if args.events_cmd == "blood-oxygen":
+        apptoken = args.apptoken
+        user_id = args.user_id
+        if not apptoken or not user_id:
+            msg = (
+                "error: missing apptoken or user_id (use --token/--user or set "
+                "HUAMI_TOKEN/HUAMI_USER_ID)"
+            )
+            print(msg, file=sys.stderr)
+            raise SystemExit(2)
+
+        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
+        try:
+            data = client.events.blood_oxygen(days=args.days, time_zone=args.timezone)
+        finally:
+            client.close()
+
+        subtype = getattr(args, "subtype", None)
+        if subtype:
+            rows = data.get(subtype, [])
+            if getattr(args, "pretty", False):
+                print(json.dumps([r.model_dump() for r in rows], indent=2, ensure_ascii=False))
+            else:
+                for r in rows:
+                    print(json.dumps(r.model_dump()))
+        elif getattr(args, "pretty", False):
+            print(
+                json.dumps(
+                    {k: [r.model_dump() for r in v] for k, v in data.items()},
+                    indent=2,
+                    ensure_ascii=False,
+                )
+            )
+        else:
+            for k, rows in data.items():
+                for r in rows:
+                    obj = r.model_dump()
+                    obj["subtype"] = k
+                    print(json.dumps(obj))
+        raise SystemExit(0)
+
     print("error: missing events subcommand", file=sys.stderr)
     raise SystemExit(2)
+
+    if False:  # unreachable, keeps ruff happy for function shape
+        return

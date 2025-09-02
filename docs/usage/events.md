@@ -41,6 +41,47 @@ zepp-cloud events stress \
   --pretty
 ```
 
+## Blood Oxygen (SpO₂)
+
+Fetch blood oxygen events and handle subtypes (click, osa_event, odi).
+
+### Quick Example (SDK)
+```python
+from zepp_cloud import ZeppClient
+
+client = ZeppClient(apptoken="<HUAMI_TOKEN>", user_id="<HUAMI_USER_ID>", timezone="America/New_York")
+
+data = client.events.blood_oxygen(days=14, time_zone="America/New_York")
+print(len(data["click"]), len(data["osa_event"]), len(data["odi"]))
+client.close()
+```
+
+### CLI
+All subtypes (grouped) as pretty JSON:
+```bash
+zepp-cloud events blood-oxygen \
+  --days 14 \
+  --tz America/New_York \
+  --user "$HUAMI_USER_ID" \
+  --token "$HUAMI_TOKEN" \
+  --pretty
+```
+
+Single subtype only (JSONL by default):
+```bash
+zepp-cloud events blood-oxygen \
+  --days 14 \
+  --tz America/New_York \
+  --user "$HUAMI_USER_ID" \
+  --token "$HUAMI_TOKEN" \
+  --subtype click
+```
+
+### Subtype Mapping
+- click: spot checks; `extra.spo2` (history may be present but is not standardized; preserved in `raw_item`).
+- osa_event: discrete desaturation events; `extra.spo2_decrease`.
+- odi: nightly ODI summary; fields `odi`, `odiNum`, `valid`, `score`, `dispCode`; grouped by local day.
+
 ## Data Shape
 - Response: `{ items: [...] }`
 - Each item contains `data` as a JSON string encoding an array of `{ time: <epoch_ms>, value: <int> }` at ~5‑minute cadence (may vary by device).
@@ -54,4 +95,3 @@ zepp-cloud events stress \
 ## Limits and Windowing
 - The endpoint supports `limit` (typically 1000 items). For large windows, the SDK splits the request into day chunks so you get all items across the span.
 - You can specify an explicit window with `from_ms`/`to_ms` if needed; otherwise, `days` creates a window ending at “now”.
-

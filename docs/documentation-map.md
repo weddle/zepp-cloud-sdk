@@ -10,11 +10,11 @@ This page lists the documentation structure and where to find things.
 - References and research notes: `docs/references.md`
 - API endpoint research summaries:
   - Band data: `docs/research/band_data.md`
-  - Events (stress): `docs/research/events.md`
+  - Events (stress, blood oxygen): `docs/research/events.md`
   - Workouts: `docs/research/workouts.md` (planned)
 - SDK Guides:
   - Band summaries/detail: `docs/usage/band.md`
-  - Events (stress): `docs/usage/events.md`
+  - Events (stress, blood oxygen): `docs/usage/events.md`
   - Workouts: `docs/usage/workouts.md` (planned)
   - Export and TSDB: `docs/export.md`, `docs/tsdb.md` (planned)
 - API Reference (to be generated with mkdocstrings later): `docs/api/`

@@ -32,3 +32,10 @@ This endpoint returns health event series for various types, including stress.
 - Respect `limit` by splitting long ranges into day-sized chunks when necessary.
 - Combine results from multiple windows to cover the full requested range.
 
+## Blood Oxygen (SpO₂) Subtypes
+- eventType: `blood_oxygen`
+- Subtypes and field mapping:
+  - click (spot): `extra.spo2`; optional `history` may exist and is preserved in `raw_item`.
+  - osa_event: `extra.spo2_decrease` (magnitude).
+  - odi (nightly summary): `odi`, `odiNum`, `valid`, `score`, `dispCode`; grouped by local day using `timestamp`.
+- Device variance: Some accounts emit empty arrays for `spo2`/`hr`; rely on `extra` fields where available.

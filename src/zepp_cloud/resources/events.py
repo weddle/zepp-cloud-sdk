@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from ..client import ZeppClient
 from ..models.stress import StressDay
+from ..parsers.blood_oxygen import parse_blood_oxygen_items
 from ..parsers.stress import parse_stress_item
 
 
@@ -54,6 +55,46 @@ class EventsResource:
             if isinstance(it, dict):
                 out.append(parse_stress_item(it, tz))
         return out
+
+    def blood_oxygen(
+        self,
+        *,
+        days: Optional[int] = 14,
+        from_ms: Optional[int] = None,
+        to_ms: Optional[int] = None,
+        time_zone: Optional[str] = None,
+        limit: int = 1000,
+    ) -> dict[str, list]:
+        tz = time_zone or self._client.timezone
+        f_ms, t_ms = _build_window_ms(days=days, from_ms=from_ms, to_ms=to_ms)
+        windows = _split_windows(f_ms, t_ms, max_days=limit)
+        agg: dict[str, list] = {"click": [], "osa_event": [], "odi": []}
+        for start, end in windows:
+            chunk = self._fetch_blood_oxygen_range(start, end, tz=tz, limit=limit)
+            for k in agg:
+                agg[k].extend(chunk.get(k, []))
+        return agg
+
+    def _fetch_blood_oxygen_range(
+        self, from_ms: int, to_ms: int, *, tz: str, limit: int
+    ) -> dict[str, list]:
+        transport = self._client._transport
+        assert transport is not None
+        base = self._client.config.events_base.rstrip("/")
+        url = f"{base}/users/{self._client.user_id}/events"
+        params = {
+            "eventType": "blood_oxygen",
+            "from": str(from_ms),
+            "to": str(to_ms),
+            "timeZone": tz,
+            "limit": str(limit),
+        }
+        resp = transport.request("GET", url, params=params)
+        body = resp.json()
+        items = body.get("items")
+        if not isinstance(items, list):
+            return {"click": [], "osa_event": [], "odi": []}
+        return parse_blood_oxygen_items(items, tz)
 
 
 def _build_window_ms(
