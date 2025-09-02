@@ -1,0 +1,17 @@
+Zepp Cloud Python SDK
+
+Copyright (c) 2025 The Zepp Cloud SDK Contributors
+
+This product is licensed under the Apache License, Version 2.0.
+
+This project is an independent, community-maintained client. It is not
+affiliated with, endorsed by, or sponsored by Zepp, Amazfit, or Huami.
+
+Parts of this work are based on publicly observable network interactions
+for the purpose of interoperability. Users are responsible for complying
+with all applicable laws and the terms of service of the upstream
+providers when using this software.
+
+The following notices are provided for informational purposes only and do
+not modify the Apache-2.0 license terms.
+

@@ -1,1 +1,39 @@
 docs/plan.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+*.dylib
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+.python-version
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Test/coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# IDE/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Docs build artifacts
+site/
