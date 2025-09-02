@@ -78,3 +78,31 @@ zepp-cloud band summary \
   --user "$HUAMI_USER_ID" \
   --pretty
 ```
+
+Detail (HR curve):
+```bash
+zepp-cloud band detail \
+  --from 2025-08-20 \
+  --to 2025-08-21 \
+  --token "$HUAMI_TOKEN" \
+  --user "$HUAMI_USER_ID" \
+  --pretty
+```
+
+- To include invalid samples (254/255/0) as `null` values in the curve, add `--keep-invalid`.
+
+### HR Decoding Notes
+- For devices that return `data_hr` as a Base64 blob, the SDK decodes to 1440 per‑minute samples for the day.
+- Values `254` and `255` indicate no reading or not-required; `0` is also treated as invalid.
+- By default invalid samples are dropped; with `--keep-invalid`, they appear as `null` BPM.
+- Timestamps are anchored to local midnight of the item’s date in your selected timezone and emitted as epoch milliseconds at 1‑minute intervals.
+
+### Device Variance
+- Some devices/firmware provide a JSON HR array under `detail.hr`; others only provide binary `data_hr`.
+- Sampling frequency can differ when `detail.hr` is present (e.g., finer than 1‑minute); when available, the SDK preserves those native timestamps.
+- Binary `data_hr` is interpreted as per‑minute BPM; values `254`, `255`, and `0` are treated as invalid by default.
+
+### Timezone Alignment
+- CLI uses `--tz` (defaults to `$TZ` or `UTC`) to align days and generate timestamps.
+- Per‑minute `data_hr` timestamps anchor to local midnight in the provided timezone, then convert to epoch ms.
+- DST transitions: local days may be 23 or 25 hours; the SDK still emits 1440 per‑minute slots from local midnight, which may not perfectly align with wall‑clock anomalies. If you need strict UTC anchoring, set `--tz UTC`.

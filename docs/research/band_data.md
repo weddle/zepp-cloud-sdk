@@ -31,6 +31,21 @@ Validated endpoint for daily activity and sleep totals (and optional detail wind
   - `sleep_start_ms = slp.st`, `sleep_end_ms = slp.ed`, `sleep_deep_min = slp.dp`, `sleep_light_min = slp.lt`, `resting_hr = slp.rhr?`
 - Keep the decoded JSON as `raw_summary` and original item as `raw_item` for provenance.
 
+### Detail and `data_hr`
+- Some devices provide an explicit JSON HR array under `detail.hr`. When present, the SDK normalizes it into `(ts_ms, bpm)` pairs.
+- Many devices provide HR detail as a Base64-encoded `data_hr` bytestring instead of JSON:
+  - 1440 bytes (per minute across the day)
+  - Byte values: `254`/`255` → invalid/no reading (often due to sampling frequency), `0` → invalid
+  - Other byte values map directly to BPM
+- Timestamps are generated at one‑minute intervals anchored to local midnight (`date`/`date_time`) using the same timezone configured in the client/CLI.
+- The SDK drops invalid samples by default; pass `--keep-invalid` via CLI to include them as `null` BPM values (or set `keep_invalid=True` when using the resource API).
+
+### Device Variance and Timezones
+- Devices/firmware may emit either JSON `detail.hr` (with native timestamps and variable cadence) or only binary `data_hr` (fixed 1440/minute cadence).
+- `summary` remains Base64‑encoded JSON with daily totals regardless of device.
+- The `date` may appear as `date` or `date_time`. The SDK supports both.
+- Timezone alignment: we align per‑day series to local midnight in the configured timezone. On DST transitions, local day length differs; per‑minute `data_hr` still provides 1440 samples. Consumers needing wall‑clock fidelity should treat timestamps with care around transitions or set timezone to `UTC`.
+
 ## Example Request (curl)
 ```bash
 curl -sS 'https://api-mifit.huami.com/v1/data/band_data.json' \
@@ -45,4 +60,3 @@ curl -sS 'https://api-mifit.huami.com/v1/data/band_data.json' \
 ## Notes
 - Devices and firmware differ; fields like `rhr` may be absent.
 - If you consistently see empty results, try a regional base host and confirm your `userid` is correct.
-

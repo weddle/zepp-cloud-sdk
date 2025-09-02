@@ -30,7 +30,7 @@ This file credits external projects, articles, and documentation that informed o
 
 - BTasker Projects: Zepp to InfluxDB (heart-rate data format wiki)
   - Link: https://projects.bentasker.co.uk/gils_projects/wiki/utilities/zepp_to_influxdb/page/Heart-Rate-Data-Format.html
-  - Informed: structure and encoding of heart-rate related payloads, expectations for data curves.
+  - Informed: structure and encoding of heart-rate related payloads; our `data_hr` decoder follows the documented per‑minute byte format (1440 bytes; 254/255 invalid, 0 invalid).
  
 
 - BTasker Blog: Writing data from a Bip 3 Smartwatch into InfluxDB

@@ -47,6 +47,25 @@ def _register_band(subparsers: argparse._SubParsersAction[argparse.ArgumentParse
         help="Pretty-print JSON array instead of JSONL",
     )
 
+    detail = band_sub.add_parser("detail", help="Fetch band detail windows")
+    detail.add_argument("--from", dest="from_date", required=True, help="From date YYYY-MM-DD")
+    detail.add_argument("--to", dest="to_date", required=True, help="To date YYYY-MM-DD")
+    detail.add_argument("--tz", dest="timezone", default=os.environ.get("TZ", "UTC"))
+    detail.add_argument("--token", dest="apptoken", default=os.environ.get("HUAMI_TOKEN"))
+    detail.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
+    detail.add_argument(
+        "--pretty",
+        dest="pretty",
+        action="store_true",
+        help="Pretty-print JSON array instead of JSONL",
+    )
+    detail.add_argument(
+        "--keep-invalid",
+        dest="keep_invalid",
+        action="store_true",
+        help="Include invalid HR samples (254/255/0) as nulls in output",
+    )
+
 
 def _handle_band(args: argparse.Namespace) -> NoReturn:
     if args.band_cmd == "summary":
@@ -63,6 +82,32 @@ def _handle_band(args: argparse.Namespace) -> NoReturn:
         client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
         try:
             rows = client.band.get_summary(args.from_date, args.to_date)
+        finally:
+            client.close()
+
+        if getattr(args, "pretty", False):
+            print(json.dumps([r.model_dump() for r in rows], indent=2, ensure_ascii=False))
+        else:
+            for r in rows:
+                print(json.dumps(r.model_dump()))
+        raise SystemExit(0)
+
+    if args.band_cmd == "detail":
+        apptoken = args.apptoken
+        user_id = args.user_id
+        if not apptoken or not user_id:
+            msg = (
+                "error: missing apptoken or user_id (use --token/--user or set "
+                "HUAMI_TOKEN/HUAMI_USER_ID)"
+            )
+            print(msg, file=sys.stderr)
+            raise SystemExit(2)
+
+        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
+        try:
+            rows = client.band.get_detail(
+                args.from_date, args.to_date, keep_invalid=getattr(args, "keep_invalid", False)
+            )
         finally:
             client.close()
 
