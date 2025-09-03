@@ -73,8 +73,8 @@ class EventsResource:
         agg: dict[str, list] = {"click": [], "osa_event": [], "odi": []}
         for start, end in windows:
             chunk = self._fetch_blood_oxygen_range(start, end, tz=tz, limit=limit)
-            for k in agg:
-                agg[k].extend(chunk.get(k, []))
+            for k, vals in chunk.items():
+                agg.setdefault(k, []).extend(vals)
         return agg
 
     def _fetch_blood_oxygen_range(

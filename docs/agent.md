@@ -23,8 +23,13 @@ These preferences describe how our AI coding agent collaborates in this repo.
 ## Testing and Quality
 
 - Add targeted tests with new code; keep CI green.
-- Use Ruff (lint+fmt) and MyPy (strict) locally before PRs.
+- Use Ruff (lint+fmt) locally before PRs; MyPy is currently disabled in hooks/CI.
 - Keep public APIs typed and documented.
+- At the end of each sprint (before pushing changes), ensure local gates pass:
+  - `pre-commit run --all-files` (ruff-format, ruff lint, EOF/trailing hooks)
+  - `ruff format --check .` and `ruff check .`
+  - `pytest -q`
+  - Fix issues and rerun until clean; only then push.
 
 ## Files and Patches
 

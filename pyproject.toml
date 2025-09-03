@@ -67,8 +67,8 @@ extend-exclude = [
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM", "PTH", "PL", "RUF"]
-ignore = ["PLR0913", "PLR2004", "UP045", "PLR0912", "PLR0915", "UP007", "PLC0206", "SIM118"]
+select = ["E", "F", "I", "B", "SIM", "PTH", "PL", "RUF"]
+ignore = ["PLR0913", "PLR2004", "PLR0912", "PLR0915"]
 
 [tool.ruff.format]
 quote-style = "preserve"
