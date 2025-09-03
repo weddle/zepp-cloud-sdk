@@ -48,4 +48,3 @@ We use an AI coding agent to assist with scaffolding and routine tasks. See `doc
 - Keep PRs focused and include a short rationale.
 - Add/adjust tests and docs to cover changes.
 - CI must pass; maintainers review before merge.
-

@@ -211,4 +211,3 @@ This summary omits endpoints that returned 404/400 or consistently empty items f
    - `PaiHealthInfo` → PAI daily totals, RHR, zone mins/thresholds
    - `readiness` → nightly `watch_score` aggregates (HRV/RHR and component scores)
 4) For workouts, paginate `/v1/sport/run/history.json` and fetch `/v1/sport/run/detail.json` using `trackid`/`source`.
-

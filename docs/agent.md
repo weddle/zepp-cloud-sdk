@@ -40,4 +40,3 @@ These preferences describe how our AI coding agent collaborates in this repo.
 
 - Summarize what changed, why, and any follow-ups.
 - Reference exact files/paths touched for easy review.
-

@@ -22,4 +22,3 @@ Provide as much detail as possible, including reproduction steps and affected ve
 ## Cryptography and Dependencies
 
 - Please flag any high or critical findings.
-
