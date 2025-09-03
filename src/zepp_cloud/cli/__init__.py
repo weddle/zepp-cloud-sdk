@@ -17,6 +17,7 @@ def main(argv: list[str] | None = None) -> NoReturn:
     subparsers = parser.add_subparsers(dest="command")
     _register_band(subparsers)
     _register_events(subparsers)
+    _register_workouts(subparsers)
 
     args = parser.parse_args(argv)
 
@@ -28,6 +29,8 @@ def main(argv: list[str] | None = None) -> NoReturn:
         return _handle_band(args)
     if args.command == "events":
         return _handle_events(args)
+    if args.command == "workouts":
+        return _handle_workouts(args)
 
     parser.print_help()
     raise SystemExit(0)
@@ -82,7 +85,12 @@ def _handle_band(args: argparse.Namespace) -> NoReturn:
             print(msg, file=sys.stderr)
             raise SystemExit(2)
 
-        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
+        # Optional base override for workouts
+        from ..config import ZeppConfig
+        cfg = ZeppConfig()
+        if getattr(args, "band_base", None):
+            cfg = ZeppConfig(band_base=str(args.band_base))
+        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone, config=cfg)
         try:
             rows = client.band.get_summary(args.from_date, args.to_date)
         finally:
@@ -106,7 +114,11 @@ def _handle_band(args: argparse.Namespace) -> NoReturn:
             print(msg, file=sys.stderr)
             raise SystemExit(2)
 
-        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
+        from ..config import ZeppConfig
+        cfg = ZeppConfig()
+        if getattr(args, "band_base", None):
+            cfg = ZeppConfig(band_base=str(args.band_base))
+        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone, config=cfg)
         try:
             rows = client.band.get_detail(
                 args.from_date, args.to_date, keep_invalid=getattr(args, "keep_invalid", False)
@@ -284,3 +296,74 @@ def _handle_events(args: argparse.Namespace) -> NoReturn:
 
     if False:  # unreachable, keeps ruff happy for function shape
         return
+
+
+def _register_workouts(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
+    w = subparsers.add_parser("workouts", help="Workout-related commands")
+    wsub = w.add_subparsers(dest="workouts_cmd")
+
+    hist = wsub.add_parser("history", help="List workout history")
+    hist.add_argument("--limit", dest="limit", type=int, default=None)
+    hist.add_argument("--pages", dest="pages", type=int, default=None)
+    hist.add_argument("--tz", dest="timezone", default=os.environ.get("TZ", "UTC"))
+    hist.add_argument("--token", dest="apptoken", default=os.environ.get("HUAMI_TOKEN"))
+    hist.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
+    hist.add_argument("--pretty", dest="pretty", action="store_true")
+    hist.add_argument("--band-base", dest="band_base", default=os.environ.get("BAND_DATA_BASE"))
+
+    det = wsub.add_parser("detail", help="Fetch workout detail")
+    det.add_argument("--trackid", required=True)
+    det.add_argument("--source", required=True)
+    det.add_argument("--tz", dest="timezone", default=os.environ.get("TZ", "UTC"))
+    det.add_argument("--token", dest="apptoken", default=os.environ.get("HUAMI_TOKEN"))
+    det.add_argument("--user", dest="user_id", default=os.environ.get("HUAMI_USER_ID"))
+    det.add_argument("--pretty", dest="pretty", action="store_true")
+    det.add_argument("--band-base", dest="band_base", default=os.environ.get("BAND_DATA_BASE"))
+
+
+def _handle_workouts(args: argparse.Namespace) -> NoReturn:
+    if args.workouts_cmd == "history":
+        apptoken = args.apptoken
+        user_id = args.user_id
+        if not apptoken or not user_id:
+            msg = (
+                "error: missing apptoken or user_id (use --token/--user or set "
+                "HUAMI_TOKEN/HUAMI_USER_ID)"
+            )
+            print(msg, file=sys.stderr)
+            raise SystemExit(2)
+        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
+        try:
+            rows = list(client.workouts.iter_history(limit=args.limit, max_pages=args.pages))
+        finally:
+            client.close()
+        if getattr(args, "pretty", False):
+            print(json.dumps([r.model_dump() for r in rows], indent=2, ensure_ascii=False))
+        else:
+            for r in rows:
+                print(json.dumps(r.model_dump()))
+        raise SystemExit(0)
+
+    if args.workouts_cmd == "detail":
+        apptoken = args.apptoken
+        user_id = args.user_id
+        if not apptoken or not user_id:
+            msg = (
+                "error: missing apptoken or user_id (use --token/--user or set "
+                "HUAMI_TOKEN/HUAMI_USER_ID)"
+            )
+            print(msg, file=sys.stderr)
+            raise SystemExit(2)
+        client = ZeppClient(apptoken=apptoken, user_id=user_id, timezone=args.timezone)
+        try:
+            d = client.workouts.detail(args.trackid, args.source)
+        finally:
+            client.close()
+        if getattr(args, "pretty", False):
+            print(json.dumps(d.model_dump(), indent=2, ensure_ascii=False))
+        else:
+            print(json.dumps(d.model_dump()))
+        raise SystemExit(0)
+
+    print("error: missing workouts subcommand", file=sys.stderr)
+    raise SystemExit(2)

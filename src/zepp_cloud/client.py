@@ -14,6 +14,7 @@ from .auth import AppTokenAuth
 from .config import ZeppConfig
 from .resources.band import BandResource
 from .resources.events import EventsResource
+from .resources.workouts import WorkoutsResource
 from .transport.http import HttpTransport
 
 
@@ -60,6 +61,10 @@ class ZeppClient:
     @property
     def events(self) -> EventsResource:
         return EventsResource(self)
+
+    @property
+    def workouts(self) -> WorkoutsResource:
+        return WorkoutsResource(self)
 
 
 class AsyncZeppClient:
