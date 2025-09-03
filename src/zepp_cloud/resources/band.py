@@ -11,6 +11,7 @@ from ..parsers.band_detail import decode_band_detail_item
 if TYPE_CHECKING:
     from ..client import ZeppClient
 
+
 class BandResource:
     def __init__(self, client: ZeppClient) -> None:
         self._client = client

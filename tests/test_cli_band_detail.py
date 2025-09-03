@@ -36,4 +36,3 @@ def test_cli_band_detail_pretty(capsys):
     assert isinstance(data, list) and len(data) == 1
     assert data[0]["date"] == "2025-08-20"
     assert data[0]["hr_points"][0] == [1, 60] or data[0]["hr_points"][0] == (1, 60)
-

@@ -32,4 +32,3 @@ class ZeppConfig:
     user_agent: str = field(
         default_factory=lambda: "zepp-cloud-sdk/0.x (+https://github.com/your-org/zepp-cloud-sdk)"
     )
-

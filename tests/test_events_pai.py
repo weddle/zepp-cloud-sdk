@@ -36,4 +36,3 @@ def test_events_pai_parses_fields():
     assert r.rest_hr == 52 and r.max_hr == 182
     assert r.zone_low_bpm == 90 and r.zone_med_bpm == 120 and r.zone_high_bpm == 150
     assert r.minutes_low == 12 and r.minutes_med == 20 and r.minutes_high == 3
-

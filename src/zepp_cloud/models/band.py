@@ -11,6 +11,7 @@ class BandDailySummary(BaseModel):
     Fields map to keys inside the decoded Base64 JSON under `summary`/`sum`.
     Unknown fields are preserved on the model via `extra="allow"`.
     """
+
     model_config = ConfigDict(frozen=True, extra="allow")
 
     date: str

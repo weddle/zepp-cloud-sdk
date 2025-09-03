@@ -42,4 +42,3 @@ class ReadinessCompanionRaw(BaseModel):
     date: str
     raw_data: Optional[Union[str, dict]] = None
     raw_item: dict[str, Any]
-

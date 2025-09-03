@@ -62,9 +62,7 @@ def test_cli_band_summary_pretty(capsys):
         "data": [
             {
                 "date": "2025-08-20",
-                "summary": _b64(
-                    {"stp": {"ttl": 1, "dis": 2, "cal": 3}, "slp": {"dp": 4, "lt": 5}}
-                ),
+                "summary": _b64({"stp": {"ttl": 1, "dis": 2, "cal": 3}, "slp": {"dp": 4, "lt": 5}}),
             },
             {
                 "date": "2025-08-21",

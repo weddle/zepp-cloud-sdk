@@ -23,4 +23,3 @@ class PaiDaily(BaseModel):
     minutes_high: Optional[int] = None
 
     raw_item: dict[str, Any]
-

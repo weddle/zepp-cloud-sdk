@@ -175,7 +175,6 @@ class EventsResource:
 def _build_window_ms(
     *, days: Optional[int], from_ms: Optional[int], to_ms: Optional[int]
 ) -> tuple[int, int]:
-
     if from_ms is not None and to_ms is not None:
         return int(from_ms), int(to_ms)
     now_ms = int(time.time() * 1000)

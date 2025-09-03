@@ -16,11 +16,7 @@ def parse_readiness_items(
         if not isinstance(it, dict):
             continue
         subtype_raw = (
-            it.get("subtype")
-            or it.get("subType")
-            or it.get("type")
-            or it.get("sub_type")
-            or ""
+            it.get("subtype") or it.get("subType") or it.get("type") or it.get("sub_type") or ""
         )
         subtype = str(subtype_raw).lower()
         ts = it.get("timestamp")

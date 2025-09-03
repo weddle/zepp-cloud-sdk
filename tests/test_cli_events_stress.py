@@ -26,9 +26,21 @@ def test_cli_events_stress_pretty(capsys):
     respx.get(url).mock(return_value=httpx.Response(200, json=payload))
 
     try:
-        cli_main([
-            "events","stress","--days","1","--tz","UTC","--token","T","--user","U","--pretty"
-        ])
+        cli_main(
+            [
+                "events",
+                "stress",
+                "--days",
+                "1",
+                "--tz",
+                "UTC",
+                "--token",
+                "T",
+                "--user",
+                "U",
+                "--pretty",
+            ]
+        )
     except SystemExit as e:
         assert e.code == 0
 
@@ -37,4 +49,3 @@ def test_cli_events_stress_pretty(capsys):
     assert isinstance(data, list) and len(data) == 1
     assert isinstance(data[0].get("date"), str)
     assert len(data[0].get("points", [])) == 2
-

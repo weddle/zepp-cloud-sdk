@@ -17,19 +17,21 @@ def test_cli_events_readiness_pretty(capsys):
     respx.get(url).mock(return_value=httpx.Response(200, json={"items": items}))
 
     try:
-        cli_main([
-            "events",
-            "readiness",
-            "--days",
-            "1",
-            "--tz",
-            "UTC",
-            "--token",
-            "T",
-            "--user",
-            "U",
-            "--pretty",
-        ])
+        cli_main(
+            [
+                "events",
+                "readiness",
+                "--days",
+                "1",
+                "--tz",
+                "UTC",
+                "--token",
+                "T",
+                "--user",
+                "U",
+                "--pretty",
+            ]
+        )
     except SystemExit as e:
         assert e.code == 0
 

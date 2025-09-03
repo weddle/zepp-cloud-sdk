@@ -262,7 +262,7 @@ def _handle_events(args: argparse.Namespace) -> NoReturn:
                 "error: missing apptoken or user_id (use --token/--user or set "
                 "HUAMI_TOKEN/HUAMI_USER_ID)"
             )
-        
+
             print(msg, file=sys.stderr)
             raise SystemExit(2)
 

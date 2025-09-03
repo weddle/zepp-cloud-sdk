@@ -36,10 +36,12 @@ def test_band_summary_parses_list_items():
                 },
                 {
                     "date": "2025-08-21",
-                    "sum": _b64({
-                        "stp": {"ttl": 4321, "dis": 98, "cal": 54},
-                        "slp": {"st": 1724186400000, "ed": 1724212800000, "dp": 40, "lt": 200},
-                    }),
+                    "sum": _b64(
+                        {
+                            "stp": {"ttl": 4321, "dis": 98, "cal": 54},
+                            "slp": {"st": 1724186400000, "ed": 1724212800000, "dp": 40, "lt": 200},
+                        }
+                    ),
                 },
             ]
         }
@@ -67,10 +69,12 @@ def test_band_summary_parses_dict_items_with_date_keys():
         payload = {
             "data": {
                 "2025-08-20": {
-                    "summary": _b64({
-                        "stp": {"ttl": 100, "dis": 200, "cal": 300},
-                        "slp": {"st": 1, "ed": 2, "dp": 3, "lt": 4, "rhr": 60},
-                    })
+                    "summary": _b64(
+                        {
+                            "stp": {"ttl": 100, "dis": 200, "cal": 300},
+                            "slp": {"st": 1, "ed": 2, "dp": 3, "lt": 4, "rhr": 60},
+                        }
+                    )
                 }
             }
         }

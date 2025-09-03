@@ -21,4 +21,3 @@ class StressDay(BaseModel):
     max: Optional[int] = None
     avg: Optional[float] = None
     raw_item: dict[str, Any]
-

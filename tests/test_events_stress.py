@@ -55,4 +55,3 @@ def test_events_stress_window_split_calls_multiple():
     # With max 1000/day chunking, expect at least 3 calls
     assert route.call_count >= 3
     assert rows == []
-

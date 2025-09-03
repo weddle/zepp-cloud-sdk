@@ -18,9 +18,21 @@ def test_cli_events_blood_oxygen_pretty_grouped(capsys):
     respx.get(url).mock(return_value=httpx.Response(200, json={"items": items}))
 
     try:
-        cli_main([
-            "events","blood-oxygen","--days","1","--tz","UTC","--token","T","--user","U","--pretty"
-        ])
+        cli_main(
+            [
+                "events",
+                "blood-oxygen",
+                "--days",
+                "1",
+                "--tz",
+                "UTC",
+                "--token",
+                "T",
+                "--user",
+                "U",
+                "--pretty",
+            ]
+        )
     except SystemExit as e:
         assert e.code == 0
 
@@ -41,9 +53,23 @@ def test_cli_events_blood_oxygen_pretty_subtype(capsys):
     respx.get(url).mock(return_value=httpx.Response(200, json={"items": items}))
 
     try:
-        cli_main([
-            "events","blood-oxygen","--days","1","--tz","UTC","--token","T","--user","U","--pretty","--subtype","click"
-        ])
+        cli_main(
+            [
+                "events",
+                "blood-oxygen",
+                "--days",
+                "1",
+                "--tz",
+                "UTC",
+                "--token",
+                "T",
+                "--user",
+                "U",
+                "--pretty",
+                "--subtype",
+                "click",
+            ]
+        )
     except SystemExit as e:
         assert e.code == 0
 

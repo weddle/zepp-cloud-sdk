@@ -46,4 +46,3 @@ def test_events_readiness_parses_watch_score():
     assert r.sleep_hrv == 28 and r.sleep_rhr == 50
     assert r.hrv_score == 70 and r.rhr_score == 80 and r.skin_temp_score == 60
     assert r.status == "ok" and r.alg_ver == "1.2"
-
